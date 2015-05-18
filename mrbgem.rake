@@ -1,4 +1,4 @@
-MRuby::Gem::Specification.new('mruby-iizlib') do |spec|
+MRuby::Gem::Specification.new('mruby-zlib') do |spec|
   spec.license = 'MIT'
   spec.authors = 'Internet Initiative Japan'
 

@@ -1,6 +1,6 @@
-# mruby-iizlib
+# mruby-zlib
 
-"mruby-iizlib" is a zlib wrapper.
+"mruby-zlib" is a zlib wrapper.
 
 ## Example
 

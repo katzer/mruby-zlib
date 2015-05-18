@@ -19,7 +19,7 @@ raise(mrb_state *mrb, z_streamp strm, int err)
 }
 
 static mrb_value
-mrb_iizlib_compress(mrb_state *mrb, mrb_value self, int windowbits)
+mrb_zlib_compress(mrb_state *mrb, mrb_value self, int windowbits)
 {
   mrb_value data, arg;
   z_stream strm;
@@ -66,19 +66,19 @@ mrb_iizlib_compress(mrb_state *mrb, mrb_value self, int windowbits)
 }
 
 static mrb_value
-mrb_iizlib_deflate(mrb_state *mrb, mrb_value self)
+mrb_zlib_deflate(mrb_state *mrb, mrb_value self)
 {
-  return mrb_iizlib_compress(mrb, self, WINDOW_BITS_DEFLATE);
+  return mrb_zlib_compress(mrb, self, WINDOW_BITS_DEFLATE);
 }
 
 static mrb_value
-mrb_iizlib_gzip(mrb_state *mrb, mrb_value self)
+mrb_zlib_gzip(mrb_state *mrb, mrb_value self)
 {
-  return mrb_iizlib_compress(mrb, self, WINDOW_BITS_GZIP);
+  return mrb_zlib_compress(mrb, self, WINDOW_BITS_GZIP);
 }
 
 static mrb_value
-mrb_iizlib_inflate(mrb_state *mrb, mrb_value self)
+mrb_zlib_inflate(mrb_state *mrb, mrb_value self)
 {
   mrb_value data, arg;
   z_stream strm;
@@ -124,17 +124,17 @@ mrb_iizlib_inflate(mrb_state *mrb, mrb_value self)
 }
 
 void
-mrb_mruby_iizlib_gem_init(mrb_state *mrb)
+mrb_mruby_zlib_gem_init(mrb_state *mrb)
 {
   struct RClass *zlib;
 
   zlib = mrb_define_module(mrb, "Zlib");
-  mrb_define_module_function(mrb, zlib, "deflate", mrb_iizlib_deflate, ARGS_REQ(1));
-  mrb_define_module_function(mrb, zlib, "gzip", mrb_iizlib_gzip, ARGS_REQ(1));
-  mrb_define_module_function(mrb, zlib, "inflate", mrb_iizlib_inflate, ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "deflate", mrb_zlib_deflate, ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "gzip", mrb_zlib_gzip, ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "inflate", mrb_zlib_inflate, ARGS_REQ(1));
 }
 
 void
-mrb_mruby_iizlib_gem_final(mrb_state *mrb)
+mrb_mruby_zlib_gem_final(mrb_state *mrb)
 {
 }
