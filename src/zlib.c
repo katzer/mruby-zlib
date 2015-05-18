@@ -10,11 +10,14 @@
 #define WINDOW_BITS_AUTO    (15 + 16 + 16)
 
 static void
-raise(mrb_state *mrb, z_streamp strm, int err)
+raise(mrb_state *mrb, z_streamp strm, int err, int (*strmEnd)(z_streamp))
 {
   char msg[256];
 
   snprintf(msg, sizeof(msg), "zlib error (%d): %s", err, strm->msg);
+  if (strmEnd) {
+    strmEnd(strm);
+  }
   mrb_raise(mrb, E_RUNTIME_ERROR, msg);
 }
 
@@ -34,7 +37,7 @@ mrb_zlib_compress(mrb_state *mrb, mrb_value self, int windowbits)
   ret = deflateInit2(&strm, Z_DEFAULT_COMPRESSION,
       Z_DEFLATED, windowbits, 8, Z_DEFAULT_STRATEGY);
   if (ret != Z_OK){
-    raise(mrb, &strm, ret);
+    raise(mrb, &strm, ret, NULL);
   }
 
   data = mrb_str_buf_new(mrb, deflateBound(&strm, RSTRING_LEN(arg)));
@@ -54,11 +57,11 @@ mrb_zlib_compress(mrb_state *mrb, mrb_value self, int windowbits)
       data = mrb_str_resize(mrb, data, strm.total_out);
       ret = deflateEnd(&strm);
       if (ret != Z_OK) {
-        raise(mrb, &strm, ret);
+        raise(mrb, &strm, ret, NULL);
       }
       break;
     } else {
-      raise(mrb, &strm, ret);
+      raise(mrb, &strm, ret, deflateEnd);
     }
   }
 
@@ -95,7 +98,7 @@ mrb_zlib_inflate(mrb_state *mrb, mrb_value self)
 
   ret = inflateInit2(&strm, WINDOW_BITS_AUTO);
   if (ret != Z_OK) {
-    raise(mrb, &strm, ret);
+    raise(mrb, &strm, ret, NULL);
   }
 
   data = mrb_str_buf_new(mrb, RSTRING_LEN(arg) * 2);
@@ -112,11 +115,11 @@ mrb_zlib_inflate(mrb_state *mrb, mrb_value self)
       data = mrb_str_resize(mrb, data, strm.total_out);
       ret = inflateEnd(&strm);
       if (ret != Z_OK) {
-        raise(mrb, &strm, ret);
+        raise(mrb, &strm, ret, NULL);
       }
       break;
     } else {
-      raise(mrb, &strm, ret);
+      raise(mrb, &strm, ret, inflateEnd);
     }
   }
 
