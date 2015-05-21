@@ -130,14 +130,15 @@ mrb_zlib_inflate(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_zlib_crc32(mrb_state *mrb, mrb_value self)
 {
-  mrb_value data, strcrc = mrb_nil_value();
+  mrb_value data;
+  mrb_value strcrc = mrb_nil_value();
+  mrb_value strcrc_new;
   uLong crc = 0L;
   uint8_t *ptr = NULL;
 
   mrb_get_args(mrb, "S|S", &data, &strcrc);
   if (mrb_nil_p(strcrc)) {
     crc = crc32(0L, Z_NULL, 0);
-    strcrc = mrb_str_new(mrb, "\0\0\0\0", 4);
   } else {
     if (RSTRING_LEN(strcrc) != 4) {
       mrb_raise(mrb, E_RUNTIME_ERROR, "crc.size must be 4");
@@ -151,12 +152,13 @@ mrb_zlib_crc32(mrb_state *mrb, mrb_value self)
   }
 
   crc = crc32(crc, (Bytef *) RSTRING_PTR(data), (uInt) RSTRING_LEN(data));
-  ptr = (uint8_t *) RSTRING_PTR(strcrc);
+  strcrc_new = mrb_str_new(mrb, "\0\0\0\0", 4);
+  ptr = (uint8_t *) RSTRING_PTR(strcrc_new);
   ptr[0] = (crc & 0xff000000) >> 24;
   ptr[1] = (crc & 0x00ff0000) >> 16;
   ptr[2] = (crc & 0x0000ff00) >> 8;
   ptr[3] = (crc & 0x000000ff);
-  return strcrc;
+  return strcrc_new;
 }
 
 void

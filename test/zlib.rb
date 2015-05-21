@@ -85,6 +85,10 @@ assert('Zlib.crc32') do
   #  => "\xA6\xEF\xDBG"
   # [Zlib.crc32("mruby-zlib", Zlib.crc32("mruby-zlib"))].pack("N")
   #  => "2P\xC9\xE3"
-  assert_equal("\xA6\xEF\xDBG", Zlib.crc32("mruby-zlib"))
-  assert_equal("2P\xC9\xE3", Zlib.crc32("mruby-zlib", Zlib.crc32("mruby-zlib")))
+
+  crc1 = crc2 = Zlib.crc32("mruby-zlib")
+  assert_equal("\xA6\xEF\xDBG", crc1)
+  crc3 = Zlib.crc32("mruby-zlib", crc2)
+  assert_equal("2P\xC9\xE3", crc3)
+  assert_equal(crc1, crc2)
 end
