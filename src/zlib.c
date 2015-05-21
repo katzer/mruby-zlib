@@ -3,6 +3,7 @@
 #include "mruby/string.h"
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <zlib.h>
 
 #define WINDOW_BITS_DEFLATE 15
@@ -126,6 +127,38 @@ mrb_zlib_inflate(mrb_state *mrb, mrb_value self)
   return data;
 }
 
+static mrb_value
+mrb_zlib_crc32(mrb_state *mrb, mrb_value self)
+{
+  mrb_value data, strcrc = mrb_nil_value();
+  uLong crc = 0L;
+  uint8_t *ptr = NULL;
+
+  mrb_get_args(mrb, "S|S", &data, &strcrc);
+  if (mrb_nil_p(strcrc)) {
+    crc = crc32(0L, Z_NULL, 0);
+    strcrc = mrb_str_new(mrb, "\0\0\0\0", 4);
+  } else {
+    if (RSTRING_LEN(strcrc) != 4) {
+      mrb_raise(mrb, E_RUNTIME_ERROR, "crc.size must be 4");
+    } else {
+      ptr = (uint8_t *) RSTRING_PTR(strcrc);
+      crc = (ptr[0] << 24) |
+            (ptr[1] << 16) |
+            (ptr[2] << 8) |
+            (ptr[3]);
+    }
+  }
+
+  crc = crc32(crc, (Bytef *) RSTRING_PTR(data), (uInt) RSTRING_LEN(data));
+  ptr = (uint8_t *) RSTRING_PTR(strcrc);
+  ptr[0] = (crc & 0xff000000) >> 24;
+  ptr[1] = (crc & 0x00ff0000) >> 16;
+  ptr[2] = (crc & 0x0000ff00) >> 8;
+  ptr[3] = (crc & 0x000000ff);
+  return strcrc;
+}
+
 void
 mrb_mruby_zlib_gem_init(mrb_state *mrb)
 {
@@ -135,6 +168,7 @@ mrb_mruby_zlib_gem_init(mrb_state *mrb)
   mrb_define_module_function(mrb, zlib, "deflate", mrb_zlib_deflate, ARGS_REQ(1));
   mrb_define_module_function(mrb, zlib, "gzip", mrb_zlib_gzip, ARGS_REQ(1));
   mrb_define_module_function(mrb, zlib, "inflate", mrb_zlib_inflate, ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "crc32", mrb_zlib_crc32, ARGS_REQ(1));
 }
 
 void

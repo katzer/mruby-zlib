@@ -13,6 +13,9 @@
  => "\037\213\b\000\000\000\000\000\000\003KLJ\006\000\302A$5\003\000\000\000"
 > Zlib.inflate(gzip)
  => "abc"
+> Zlib.crc32("abc")
+ => "5$A\302"  # big endian unsigned 32bit.
+               # Sometimes mruby fixnum has not enough size to save crc32.
 ```
 
 

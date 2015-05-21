@@ -78,3 +78,13 @@ assert('vs CRuby Zlib') do
   #  => "x\234strvqus\a\000\a[\001\335"
   assert_equal("ABCDEFG", Zlib.inflate("x\234strvqus\a\000\a[\001\335"))
 end
+
+assert('Zlib.crc32') do
+  # CRuby:
+  # [Zlib.crc32("mruby-zlib")].pack("N")
+  #  => "\xA6\xEF\xDBG"
+  # [Zlib.crc32("mruby-zlib", Zlib.crc32("mruby-zlib"))].pack("N")
+  #  => "2P\xC9\xE3"
+  assert_equal("\xA6\xEF\xDBG", Zlib.crc32("mruby-zlib"))
+  assert_equal("2P\xC9\xE3", Zlib.crc32("mruby-zlib", Zlib.crc32("mruby-zlib")))
+end
