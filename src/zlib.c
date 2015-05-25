@@ -135,9 +135,10 @@ mrb_zlib_crc32(mrb_state *mrb, mrb_value self)
   mrb_value strcrc_new;
   uLong crc = 0L;
   uint8_t *ptr = NULL;
+  int nargs;
 
-  mrb_get_args(mrb, "S|S", &data, &strcrc);
-  if (mrb_nil_p(strcrc)) {
+  nargs = mrb_get_args(mrb, "S|S", &data, &strcrc);
+  if (nargs < 2) {
     crc = crc32(0L, Z_NULL, 0);
   } else {
     if (RSTRING_LEN(strcrc) != 4) {
