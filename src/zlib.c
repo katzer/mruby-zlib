@@ -168,10 +168,10 @@ mrb_mruby_zlib_gem_init(mrb_state *mrb)
   struct RClass *zlib;
 
   zlib = mrb_define_module(mrb, "Zlib");
-  mrb_define_module_function(mrb, zlib, "deflate", mrb_zlib_deflate, ARGS_REQ(1));
-  mrb_define_module_function(mrb, zlib, "gzip", mrb_zlib_gzip, ARGS_REQ(1));
-  mrb_define_module_function(mrb, zlib, "inflate", mrb_zlib_inflate, ARGS_REQ(1));
-  mrb_define_module_function(mrb, zlib, "crc32", mrb_zlib_crc32, ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "deflate", mrb_zlib_deflate, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "gzip", mrb_zlib_gzip, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "inflate", mrb_zlib_inflate, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, zlib, "crc32", mrb_zlib_crc32, MRB_ARGS_REQ(1));
 }
 
 void
