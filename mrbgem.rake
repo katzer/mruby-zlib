@@ -3,7 +3,7 @@ MRuby::Gem::Specification.new('mruby-zlib') do |spec|
   spec.authors = 'Internet Initiative Japan Inc.'
 
   if spec.mruby.cc.defines.include? 'ZLIB_STATIC'
-    spec.cc.include_paths << "#{dir}/zlib}"
+    spec.cc.include_paths << "#{dir}/zlib"
     spec.cc.defines << 'HAVE_UNISTD_H'
 
     file "#{dir}/zlib" do
