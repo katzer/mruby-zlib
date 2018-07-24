@@ -4,7 +4,7 @@ MRuby::Gem::Specification.new('mruby-zlib') do |spec|
 
   if spec.mruby.cc.defines.include? 'ZLIB_STATIC'
     spec.cc.include_paths << "#{dir}/zlib"
-    spec.cc.defines << 'HAVE_UNISTD_H'
+    spec.cc.defines << 'HAVE_UNISTD_H' if build.toolchains.include? 'gcc'
 
     file "#{dir}/zlib" do
       sh "curl -s --fail --retry 3 --retry-delay 1 http://zlib.net/zlib-1.2.11.tar.gz | tar xzC . && mv zlib-1.2.11 #{dir}/zlib"
