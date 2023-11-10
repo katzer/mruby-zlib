@@ -7,8 +7,8 @@ MRuby::Gem::Specification.new('mruby-zlib') do |spec|
     spec.cc.defines << 'HAVE_UNISTD_H' if build.toolchains.include? 'gcc'
 
     file "#{dir}/zlib" do
-      sh 'curl -L --fail --retry 3 --retry-delay 1 https://zlib.net/fossils/zlib-1.2.13.tar.gz -s -o - | tar zxf -'
-      mv 'zlib-1.2.13', "#{dir}/zlib"
+      sh 'curl -L --fail --retry 3 --retry-delay 1 https://zlib.net/fossils/zlib-1.3.tar.gz -s -o - | tar zxf -'
+      mv 'zlib-1.3', "#{dir}/zlib"
     end
 
     Rake::Task["#{dir}/zlib"].invoke
